@@ -11,7 +11,7 @@ import remarkRehype from 'remark-rehype'
 import {unified} from 'unified'
 import {reporter} from 'vfile-reporter'
 import rehypePrettyCode from 'rehype-pretty-code';
-
+import { transformerCopyButton } from '@rehype-pretty/transformers'
 
 export default async function Page({ params }) {
     const { slug } = await params;
@@ -33,7 +33,13 @@ export default async function Page({ params }) {
     .use(rehypeFormat)
     .use(rehypeStringify)
     .use(rehypePrettyCode, {
-        theme: 'github-dark'
+        theme: 'github-dark',
+        transformers: [
+            transformerCopyButton({
+              visibility: 'always',
+              feedbackDuration: 3_000,
+            }),
+          ],
       })
     .process(content);
 
@@ -42,7 +48,7 @@ export default async function Page({ params }) {
             <h1 className="text-4xl font-bold mb-2">{data.title}</h1>
             <p className="mb-4 italic">{data.description}</p>
             <div className="mb-4">
-                <p className="prose" dangerouslySetInnerHTML={{ __html: String(htmlContent) }}></p>
+                <p className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: String(htmlContent) }}></p>
             </div>
             <div className="text-sm">
                 <p>By {data.author} on {data.date}</p>

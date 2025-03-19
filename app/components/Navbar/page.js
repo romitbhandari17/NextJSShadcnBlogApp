@@ -2,15 +2,44 @@
 "use client";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import ModeToggle from '@/app/components/theme-btn';
+import LoadingBar from "react-top-loading-bar";
+import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const pathname = usePathname();
+
+    useEffect(() => {
+        setProgress(30);
+
+        setTimeout(() => {
+            setProgress(70)
+        }, 100);
+
+        setTimeout(() => {
+            setProgress(100)
+        }, 400);
+
+    }, [pathname]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setProgress(0)
+        }, 500);
+    }, [])
+
 
     return (
         <nav className="bg-background/50 p-4 sticky top-0 z-50 backdrop-blur">
+            <LoadingBar
+                color="#f11946"
+                progress={progress}
+                onLoaderFinished={() => setProgress(0)}
+            />
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
                 <Link href="/" className=" text-2xl font-bold">
